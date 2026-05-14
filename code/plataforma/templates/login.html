@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #f6fcf8;
+        color: #fff;
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+    }
+
+    .form-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 30px;
+        background-color: #163d26;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        text-align: center;
+    }
+
+    .form-container h2 {
+        color: #ffd700;
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+
+    .form-container label {
+        text-align: left;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .form-container input {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1f5e3a;
+        color: white;
+    }
+
+    .form-container button {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #ffd700;
+        color: #0f2f1c;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .form-container button:hover {
+        background-color: #e6c200;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+{% endblock %}

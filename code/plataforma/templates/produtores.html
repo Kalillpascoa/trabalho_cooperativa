@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Produtores</h2>
+
+<table class="table table-striped">
+
+<thead>
+<tr>
+    <th>Nome</th>
+    <th>Fazenda</th>
+    <th>Município</th>
+    <th>Saldo</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for produtor in produtores %}
+
+<tr>
+    <td>{{ produtor.nome }}</td>
+    <td>{{ produtor.fazenda }}</td>
+    <td>{{ produtor.municipio }}</td>
+    <td>R$ {{ produtor.saldo }}</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Produtos</h2>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Estoque Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for produto in produtos %}
+
+        <tr>
+            <td>{{ produto.nome }}</td>
+            <td>R$ {{ produto.preco }}</td>
+            <td>{{ produto.estoque_total }} ton</td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Controle de Estoque</h2>
+
+    <div class="card shadow p-4 mb-5">
+
+        <h4 class="mb-4">Estoque Total dos Produtos</h4>
+
+        <canvas id="graficoBarra"></canvas>
+
+    </div>
+
+    <div class="card shadow p-4">
+
+        <h4 class="mb-4">Estoque por Produtor</h4>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Selecione o produtor
+            </label>
+
+            <select id="produtorSelect" class="form-select">
+
+                {% for produtor in produtores %}
+
+                    <option value="{{ produtor.nome }}">
+                        {{ produtor.nome }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <canvas id="graficoPizza"></canvas>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labelsBarra = JSON.parse('{{ labels|safe|escapejs }}');
+
+const dadosBarra = JSON.parse('{{ dados|safe|escapejs }}');
+
+const estoqueProdutores = JSON.parse(
+    '{{ estoque_produtores|safe|escapejs }}'
+);
+
+
+const graficoBarra = new Chart(
+
+    document.getElementById('graficoBarra'),
+
+    {
+
+        type: 'bar',
+
+        data: {
+
+            labels: labelsBarra,
+
+            datasets: [
+
+                {
+
+                    label: 'Toneladas em estoque',
+
+                    data: dadosBarra,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+let graficoPizza = null;
+
+
+function carregarGrafico(produtor) {
+
+    const dadosProdutor = estoqueProdutores[produtor];
+
+    if (!dadosProdutor) {
+
+        return;
+
+    }
+
+    if (graficoPizza) {
+
+        graficoPizza.destroy();
+
+    }
+
+    graficoPizza = new Chart(
+
+        document.getElementById('graficoPizza'),
+
+        {
+
+            type: 'pie',
+
+            data: {
+
+                labels: dadosProdutor.labels,
+
+                datasets: [
+
+                    {
+
+                        data: dadosProdutor.dados
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true
+
+            }
+
+        }
+
+    );
+
+}
+
+
+const selectProdutor = document.getElementById('produtorSelect');
+
+
+if (selectProdutor.value) {
+
+    carregarGrafico(selectProdutor.value);
+
+}
+
+
+selectProdutor.addEventListener(
+
+    'change',
+
+    function () {
+
+        carregarGrafico(this.value);
+
+    }
+
+);
+
+</script>
+
+{% endblock %}
