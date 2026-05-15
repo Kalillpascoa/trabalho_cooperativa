@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Aplicação Django</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>Tags de Templates do Django</h1>
     <p>Exemplo com tags para variáveis:</p>
     <ul>
@@ -16,17 +18,18 @@
     </ul>
     <p>Exemplo com tags para condicional:</p>
     {% if condicional == 1 %}
-        <b>Programação</b>
+    <b>Programação</b>
     {% elif condicional == 2 %}
-        <b>Web</b>
+    <b>Web</b>
     {% else %}
-        <b>UFLA</b>
+    <b>UFLA</b>
     {% endif %}
     <p>Exemplo com tags para repetição:</p>
     <ul>
         {% for x in numeros %}
-            <li>{{ x }}</li>
+        <li>{{ x }}</li>
         {% endfor %}
     </ul>
-  </body>
+</body>
+
 </html>

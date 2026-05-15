@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,32 +9,153 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm py-3">
+    <div class="container">
 
-        <a class="navbar-brand" href="{% url 'pagina_inicial' %}">Cooperativa</a>
+        <!-- Logo / Nome -->
+        <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="{% url 'pagina_inicial' %}">
+            <img
+                src="{% static '2pinheiros.png' %}"
+                alt="Logo"
+                width="40"
+                height="40"
+                class="me-2 rounded-circle bg-white p-1"
+            >
+            Cooperativa Agrícola
+        </a>
 
-        <ul class="navbar-nav">
+        <!-- Botão Mobile -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <li class="nav-item"><a class="nav-link" href="{% url 'pagina_inicial' %}">Início</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'produtores' %}">Produtores</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'clientes' %}">Clientes</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'produtos' %}">Produtos</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'estoque' %}">Estoque</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'pedidos' %}">Pedidos</a></li>
-            <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
+        <!-- Itens -->
+        <div class="collapse navbar-collapse" id="navbarNav">
 
-            {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
-            {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'cadastro' %}">Cadastro</a></li>
-            {% endif %}
+            <!-- Menu principal -->
+            <ul class="navbar-nav mx-auto gap-2">
 
-        </ul>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'pagina_inicial' %}">
+                        Início
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'produtores' %}">
+                        Produtores
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'clientes' %}">
+                        Clientes
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'produtos' %}">
+                        Produtos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'estoque' %}">
+                        Estoque
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'pedidos' %}">
+                        Pedidos
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- Área usuário -->
+            <ul class="navbar-nav align-items-center">
+
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item me-3 text-white fw-semibold">
+                        Olá, {{ user.username }}
+                    </li>
+
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-light btn-sm fw-semibold px-3"
+                            >
+                                Sair
+                            </button>
+                        </form>
+                    </li>
+
+                {% else %}
+
+                    <li class="nav-item">
+                        <a
+                            class="btn btn-outline-light btn-sm me-2 px-3"
+                            href="{% url 'login' %}"
+                        >
+                            Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="btn btn-light btn-sm text-success fw-semibold px-3"
+                            href="{% url 'cadastro' %}"
+                        >
+                            Cadastro
+                        </a>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
 
     </div>
 </nav>
+
+{% if messages %}
+
+    <div class="container mt-3">
+
+        {% for message in messages %}
+
+            <div class="alert alert-warning alert-dismissible fade show">
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
 
 <div class="container mt-4">
     {% block content %}{% endblock %}

@@ -2,32 +2,57 @@
 
 {% block content %}
 
-<h2>Produtos</h2>
+<div class="container mt-4">
 
-<table class="table table-striped">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Estoque Total</th>
-        </tr>
-    </thead>
+        <h2>Produtos</h2>
 
-    <tbody>
+        <a href="{% url 'cadastro_produto' %}"
+           class="btn btn-success">
 
-        {% for produto in produtos %}
+            Cadastrar novo produto
 
-        <tr>
-            <td>{{ produto.nome }}</td>
-            <td>R$ {{ produto.preco }}</td>
-            <td>{{ produto.estoque_total }} ton</td>
-        </tr>
+        </a>
 
-        {% endfor %}
+    </div>
 
-    </tbody>
+    <table class="table table-striped">
 
-</table>
+        <thead>
+
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Estoque Total</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for produto in produtos %}
+
+            <tr>
+
+                <td>{{ produto.nome }}</td>
+
+                <td>
+                    R$ {{ produto.preco }}
+                </td>
+
+                <td>
+                    {{ produto.estoque_total }} ton
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 {% endblock %}

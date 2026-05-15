@@ -21,10 +21,25 @@ class UsuarioCreationForm(UserCreationForm):
 class EstoqueForm(forms.ModelForm):
     class Meta:
         model = Estoque
-        fields = ['produto', 'quantidade']
-
+        fields = [
+            'produtor',
+            'produto',
+            'quantidade'
+        ]
 
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['produto', 'quantidade']
+        fields = [
+            'produto',
+            'quantidade'
+        ]
+
+class ProdutoForm(forms.ModelForm):
+    class Meta:
+        model = Produto
+        fields = [
+            'nome',
+            'preco',
+            'estoque_total'
+        ]

@@ -106,7 +106,6 @@ def clientes(request):
         }
     )
 
-
 # =========================================
 # PRODUTOS
 # =========================================
@@ -115,14 +114,9 @@ def produtos(request):
 
     produtos = Produto.objects.all()
 
-    return render(
-        request,
-        'produtos.html',
-        {
-            'produtos': produtos
-        }
-    )
-
+    return render(request, 'produtos.html', {
+        'produtos': produtos
+    })
 
 # =========================================
 # PEDIDOS
@@ -140,59 +134,6 @@ def pedidos(request):
         'pedidos.html',
         {
             'pedidos': pedidos
-        }
-    )
-
-
-# =========================================
-# CADASTRAR PEDIDO
-# =========================================
-@login_required
-def cadastrar_pedido(request):
-
-    cliente = Cliente.objects.get(
-        user=request.user
-    )
-
-    if request.method == 'POST':
-
-        form = PedidoForm(request.POST)
-
-        if form.is_valid():
-
-            pedido = form.save(commit=False)
-
-            pedido.cliente = cliente
-
-            produto = pedido.produto
-
-            if pedido.quantidade > produto.estoque_total:
-
-                messages.error(
-                    request,
-                    'Estoque insuficiente'
-                )
-
-                return redirect('pedido')
-
-            pedido.save()
-
-            messages.success(
-                request,
-                'Pedido cadastrado com sucesso!'
-            )
-
-            return redirect('pedidos')
-
-    else:
-
-        form = PedidoForm()
-
-    return render(
-        request,
-        'cadastro_pedido.html',
-        {
-            'form': form
         }
     )
 
@@ -250,4 +191,150 @@ def estoque(request):
         request,
         'estoque.html',
         context
+    )
+
+# =========================================
+# CADASTRAR PRODUTO
+# =========================================
+@login_required
+def cadastrar_produto(request):
+
+    if request.method == 'POST':
+
+        form = ProdutoForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Produto cadastrado com sucesso!'
+            )
+
+            return redirect('produtos')
+
+    else:
+
+        form = ProdutoForm()
+
+    return render(
+        request,
+        'cadastrar_produto.html',
+        {'form': form}
+    )
+
+# =========================================
+# CADASTRAR ESTOQUE
+# =========================================
+@login_required
+def cadastrar_estoque(request):
+
+    if request.method == 'POST':
+
+        form = EstoqueForm(request.POST)
+
+        if form.is_valid():
+
+            estoque = form.save()
+
+            produto = estoque.produto
+
+            produto.estoque_total += estoque.quantidade
+
+            produto.save()
+
+            messages.success(
+                request,
+                'Produção cadastrada com sucesso!'
+            )
+
+            return redirect('estoque')
+
+    else:
+
+        form = EstoqueForm()
+
+    return render(
+        request,
+        'cadastrar_estoque.html',
+        {'form': form}
+    )
+
+# =========================================
+# CADASTRAR PEDIDO
+# =========================================
+def cadastrar_pedido(request):
+
+    # Verifica se o usuário está logado
+    if not request.user.is_authenticated:
+
+        messages.warning(
+            request,
+            'Você precisa estar logado para cadastrar um novo pedido.'
+        )
+
+        return redirect('login')
+
+    # Verifica se o usuário possui cliente
+    try:
+
+        cliente = Cliente.objects.get(
+            user=request.user
+        )
+
+    except Cliente.DoesNotExist:
+
+        messages.error(
+            request,
+            'Seu usuário não possui perfil de cliente.'
+        )
+
+        return redirect('pagina_inicial')
+
+    if request.method == 'POST':
+
+        form = PedidoForm(request.POST)
+
+        if form.is_valid():
+
+            pedido = form.save(commit=False)
+
+            pedido.cliente = cliente
+
+            produto = pedido.produto
+
+            # Verifica estoque
+            if pedido.quantidade > produto.estoque_total:
+
+                messages.error(
+                    request,
+                    'Estoque insuficiente.'
+                )
+
+                return redirect('pedido')
+
+            # Atualiza estoque
+            produto.estoque_total -= pedido.quantidade
+            produto.save()
+
+            pedido.save()
+
+            messages.success(
+                request,
+                'Pedido cadastrado com sucesso!'
+            )
+
+            return redirect('pedidos')
+
+    else:
+
+        form = PedidoForm()
+
+    return render(
+        request,
+        'cadastrar_pedidos.html',
+        {
+            'form': form
+        }
     )

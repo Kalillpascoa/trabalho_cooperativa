@@ -5,6 +5,12 @@
 <div class="container mt-4">
 
     <h2 class="mb-4">Controle de Estoque</h2>
+    <a href="{% url 'cadastro_estoque' %}" 
+        class="btn btn-success mb-4">
+
+            Cadastrar nova produção
+
+    </a>
 
     <div class="card shadow p-4 mb-5">
 
@@ -28,9 +34,9 @@
 
                 {% for produtor in produtores %}
 
-                    <option value="{{ produtor.nome }}">
-                        {{ produtor.nome }}
-                    </option>
+                <option value="{{ produtor.nome }}">
+                    {{ produtor.nome }}
+                </option>
 
                 {% endfor %}
 
@@ -48,100 +54,36 @@
 
 <script>
 
-const labelsBarra = JSON.parse('{{ labels|safe|escapejs }}');
+    const labelsBarra = JSON.parse('{{ labels|safe|escapejs }}');
 
-const dadosBarra = JSON.parse('{{ dados|safe|escapejs }}');
+    const dadosBarra = JSON.parse('{{ dados|safe|escapejs }}');
 
-const estoqueProdutores = JSON.parse(
-    '{{ estoque_produtores|safe|escapejs }}'
-);
-
-
-const graficoBarra = new Chart(
-
-    document.getElementById('graficoBarra'),
-
-    {
-
-        type: 'bar',
-
-        data: {
-
-            labels: labelsBarra,
-
-            datasets: [
-
-                {
-
-                    label: 'Toneladas em estoque',
-
-                    data: dadosBarra,
-
-                    borderWidth: 1
-
-                }
-
-            ]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            scales: {
-
-                y: {
-
-                    beginAtZero: true
-
-                }
-
-            }
-
-        }
-
-    }
-
-);
+    const estoqueProdutores = JSON.parse(
+        '{{ estoque_produtores|safe|escapejs }}'
+    );
 
 
-let graficoPizza = null;
+    const graficoBarra = new Chart(
 
-
-function carregarGrafico(produtor) {
-
-    const dadosProdutor = estoqueProdutores[produtor];
-
-    if (!dadosProdutor) {
-
-        return;
-
-    }
-
-    if (graficoPizza) {
-
-        graficoPizza.destroy();
-
-    }
-
-    graficoPizza = new Chart(
-
-        document.getElementById('graficoPizza'),
+        document.getElementById('graficoBarra'),
 
         {
 
-            type: 'pie',
+            type: 'bar',
 
             data: {
 
-                labels: dadosProdutor.labels,
+                labels: labelsBarra,
 
                 datasets: [
 
                     {
 
-                        data: dadosProdutor.dados
+                        label: 'Toneladas em estoque',
+
+                        data: dadosBarra,
+
+                        borderWidth: 1
 
                     }
 
@@ -151,7 +93,17 @@ function carregarGrafico(produtor) {
 
             options: {
 
-                responsive: true
+                responsive: true,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
 
             }
 
@@ -159,30 +111,84 @@ function carregarGrafico(produtor) {
 
     );
 
-}
+
+    let graficoPizza = null;
 
 
-const selectProdutor = document.getElementById('produtorSelect');
+    function carregarGrafico(produtor) {
 
+        const dadosProdutor = estoqueProdutores[produtor];
 
-if (selectProdutor.value) {
+        if (!dadosProdutor) {
 
-    carregarGrafico(selectProdutor.value);
+            return;
 
-}
+        }
 
+        if (graficoPizza) {
 
-selectProdutor.addEventListener(
+            graficoPizza.destroy();
 
-    'change',
+        }
 
-    function () {
+        graficoPizza = new Chart(
 
-        carregarGrafico(this.value);
+            document.getElementById('graficoPizza'),
+
+            {
+
+                type: 'pie',
+
+                data: {
+
+                    labels: dadosProdutor.labels,
+
+                    datasets: [
+
+                        {
+
+                            data: dadosProdutor.dados
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true
+
+                }
+
+            }
+
+        );
 
     }
 
-);
+
+    const selectProdutor = document.getElementById('produtorSelect');
+
+
+    if (selectProdutor.value) {
+
+        carregarGrafico(selectProdutor.value);
+
+    }
+
+
+    selectProdutor.addEventListener(
+
+        'change',
+
+        function () {
+
+            carregarGrafico(this.value);
+
+        }
+
+    );
 
 </script>
 

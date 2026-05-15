@@ -23,7 +23,9 @@ urlpatterns = [
     # Logout
     path(
         'logout/',
-        auth_views.LogoutView.as_view(),
+        auth_views.LogoutView.as_view(
+            next_page='pagina_inicial'
+        ),
         name='logout'
     ),
 
@@ -68,4 +70,19 @@ urlpatterns = [
         views.estoque,
         name='estoque'
     ),
+
+    # Cadastro de produto
+    path(
+        'cadastro-produto/',
+        views.cadastrar_produto,
+        name='cadastro_produto'
+    ),
+
+    # Cadastro de estoque
+    path(
+        'cadastro-estoque/',
+        views.cadastrar_estoque,
+        name='cadastro_estoque'
+    ),
 ]
+
