@@ -3,9 +3,12 @@
 Sistema web desenvolvido em Django para gerenciamento de cooperativa agrícola, permitindo o controle de produtores, clientes, produtos, pedidos e estoque.
 
 👥 **Alunos/Desenvolvedores**
-Kalill Jose Viana da Páscoa
+
+Kalill José Viana da Páscoa
+
 Robson Ferreira dos Santos Junior
-🛠️ Pré-requisitos
+
+**🛠️ Pré-requisitos**
 
 **Antes de executar o projeto, instale:**
 
