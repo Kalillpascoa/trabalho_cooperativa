@@ -1,60 +1,57 @@
-Sistema de Cooperativa Agrícola 🌱🚜
+**Sistema de Cooperativa Agrícola 🌱🚜**
 
 Sistema web desenvolvido em Django para gerenciamento de cooperativa agrícola, permitindo o controle de produtores, clientes, produtos, pedidos e estoque.
 
-👥 Alunos/Desenvolvedores
+👥 **Alunos/Desenvolvedores**
 Kalill Jose Viana da Páscoa
 Robson Ferreira dos Santos Junior
 🛠️ Pré-requisitos
 
-Antes de executar o projeto, instale:
+**Antes de executar o projeto, instale:**
 
 Python 3.x
 pip
 virtualenv
-🚀 Instalação
 
-1. Clone o repositório
+**🚀 Instalação**
+
+**1. Clone o repositório**
 git clone https://github.com/Kalillpascoa/trabalho_cooperativa.git
 cd trabalho_cooperativa-main/code
 
-2. Crie e ative um ambiente virtual
+**2. Crie e ative um ambiente virtual**
 
 É importante que o ambiente virtual seja criado na pasta que contém o arquivo manage.py.
 
-Linux / macOS
+**Linux / macOS**
 python3 -m venv venv
 source venv/bin/activate
 
-Windows (CMD / PowerShell)
+**Windows (CMD / PowerShell)**
 python3 -m venv venv
 venv\Scripts\activate
 
-3. Instale as dependências
+**3. Instale as dependências**
 pip install django
 
-Caso utilize bibliotecas adicionais:
-
-pip install pillow
-4. Execute as migrations
+**4. Execute as migrations**
 python3 manage.py migrate
-5. Crie um superusuário
+
+**5. Crie um superusuário**
 python3 manage.py createsuperuser
 
 Preencha:
 Usuário: admin
 Senha: admin
 
-(ou utilize os dados desejados)
-
-▶️ Como executar
+**▶️ Como executar**
 Rodar o servidor de desenvolvimento
 python3 manage.py runserver
 
 O sistema ficará disponível em:
-
 http://127.0.0.1:8000/
-📋 Funcionalidades do Sistema
+
+**📋 Funcionalidades do Sistema**
 
 ✅ Cadastro de usuários
 ✅ Login e logout
@@ -67,17 +64,14 @@ http://127.0.0.1:8000/
 ✅ Gráficos de produtos e estoque
 ✅ Área administrativa do Django
 
-🔐 Área Administrativa
-
+**🔐 Área Administrativa**
 Acesse:
-
 http://127.0.0.1:8000/admin/
-
-Exemplo:
 
 Usuário: admin
 Senha: admin
-📂 Estrutura do Projeto
+
+**📂 Estrutura do Projeto**
 code/
 │
 ├── cooperativa/
@@ -98,14 +92,7 @@ code/
 └── db.sqlite3
 🖼️ Arquivos Estáticos
 
-As imagens, CSS e JavaScript devem ficar dentro da pasta:
-
-plataforma/static/
-
-Exemplo:
-
-plataforma/static/2pinheiros.png
-📖 Tecnologias Utilizadas
+**📖 Tecnologias Utilizadas**
 Python
 Django
 SQLite
@@ -114,62 +101,40 @@ CSS3
 Bootstrap
 JavaScript
 Chart.js
-📊 Dashboard
 
-O sistema possui dashboard com:
-
-Quantidade de produtos
-Controle de estoque
-Estoque por produtor
-Gráficos dinâmicos
-🔒 Controle de Acesso
-
+**🔒 Controle de Acesso**
 O sistema utiliza autenticação do Django:
-
 Login
 Logout
 Registro de usuários
 Controle por perfil:
 Produtor
 Cliente
-📖 Documentação
 
+📖 **Documentação**
 Documentação oficial do Django:
-
 Django Documentation
 
-🌱 Objetivo do Projeto
+**🌱 Objetivo do Projeto**
+O projeto foi desenvolvido para auxiliar cooperativas agrícolas no gerenciamento de suas atividades.
 
-O projeto foi desenvolvido para auxiliar cooperativas agrícolas no gerenciamento de:
-
-produtores;
-clientes;
-produtos;
-estoque;
-pedidos agrícolas.
-
-Além disso, o sistema possui interface web responsiva e dashboard administrativo.
-
-📌 Observações
-
+**📌 Observações**
 Caso ocorram problemas com migrations:
 
 python3 manage.py makemigrations
 python3 manage.py migrate
 
 Caso o banco apresente conflitos:
-
 del db.sqlite3
 
 Depois execute novamente:
 
 python3 manage.py migrate
-🎓 Projeto Acadêmico
 
+**🎓 Projeto Acadêmico****
 Projeto desenvolvido para a disciplina de Programação Web.
 
-🚜 Cooperativa Agrícola
+🚜 **Cooperativa Agrícola**
 
 Sistema acadêmico para gerenciamento agrícola utilizando Django.
 
-Obrigado! 🌱🚜
