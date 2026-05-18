@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
+from django.db.models import Sum, F
+from django.db.models.functions import Coalesce
+from django.db.models import DecimalField, Value
+import json
 
 from .models import *
 from .forms import *
@@ -144,47 +148,176 @@ def pedidos(request):
 @login_required
 def estoque(request):
 
-    produtos = Produto.objects.all()
+    # =====================================================
+    # GRÁFICO 1
+    # ESTOQUE TOTAL POR PRODUTO
+    # =====================================================
+
+    estoque_total = (
+        Estoque.objects
+        .values('produto__nome')
+        .annotate(total=Coalesce(Sum('quantidade'), Value(0), output_field=DecimalField()))
+    )
+
+    labels = [
+        item['produto__nome']
+        for item in estoque_total
+    ]
+
+    dados = [
+        float(item['total'])
+        for item in estoque_total
+    ]
+
+    # =====================================================
+    # GRÁFICO 2
+    # ESTOQUE POR PRODUTOR
+    # =====================================================
 
     produtores = Produtor.objects.all()
-
-    labels = []
-    dados = []
-
-    for produto in produtos:
-
-        labels.append(produto.nome)
-
-        dados.append(float(produto.estoque_total))
 
     estoque_produtores = {}
 
     for produtor in produtores:
 
+        dados_produtor = (
+            Estoque.objects
+            .filter(produtor=produtor)
+            .values('produto__nome')
+            .annotate(total=Coalesce(Sum('quantidade'), Value(0), output_field=DecimalField()))
+        )
+
         estoque_produtores[produtor.nome] = {
-            'labels': [],
-            'dados': []
+
+            'labels': [
+                item['produto__nome']
+                for item in dados_produtor
+            ],
+
+            'dados': [
+                float(item['total'])
+                for item in dados_produtor
+            ]
+
         }
+
+    # =====================================================
+    # GRÁFICO 3
+    # FINANCEIRO
+    # =====================================================
+
+    financeiro = {
+
+        'labels': [],
+        'potencial': [],
+        'disponivel': []
+
+    }
+
+    for produtor in produtores:
 
         estoques = Estoque.objects.filter(
             produtor=produtor
         )
 
-        for estoque in estoques:
+        potencial = 0
 
-            estoque_produtores[produtor.nome]['labels'].append(
-                estoque.produto.nome
+        for item in estoques:
+
+            potencial += (
+                float(item.quantidade) *
+                float(item.produto.preco)
             )
 
-            estoque_produtores[produtor.nome]['dados'].append(
-                float(estoque.quantidade)
+        # saldo disponível = pedidos vendidos
+        vendido = 0
+
+        pedidos_produtor = Pedido.objects.filter(
+            produto__estoque__produtor=produtor
+        ).distinct()
+
+        for pedido in pedidos_produtor:
+
+            vendido += (
+                float(pedido.quantidade) *
+                float(pedido.produto.preco)
             )
+
+        financeiro['labels'].append(
+            produtor.nome
+        )
+
+        financeiro['potencial'].append(
+            round(potencial, 2)
+        )
+
+        financeiro['disponivel'].append(
+            round(vendido, 2)
+        )
+
+    # =====================================================
+    # ANÁLISE CLIENTES
+    # =====================================================
+
+    clientes = Cliente.objects.all()
+
+    analise_clientes = []
+
+    pedidos = Pedido.objects.select_related(
+        'cliente',
+        'produto'
+    )
+
+    for pedido in pedidos:
+
+        total = (
+            float(pedido.quantidade) *
+            float(pedido.produto.preco)
+        )
+
+        analise_clientes.append({
+
+            'cliente': pedido.cliente.nome,
+
+            'produto': pedido.produto.nome,
+
+            'pedidos': int(pedido.quantidade),
+
+            'total': round(total, 2),
+
+            'custo': round(
+                float(pedido.produto.preco),
+                2
+            )
+
+        })
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
 
     context = {
-        'labels': labels,
-        'dados': dados,
-        'estoque_produtores': estoque_produtores,
-        'produtores': produtores
+
+        'labels': json.dumps(labels),
+
+        'dados': json.dumps(dados),
+
+        'estoque_produtores': json.dumps(
+            estoque_produtores
+        ),
+
+        'financeiro': json.dumps(
+            financeiro
+        ),
+
+        'analise_clientes': json.dumps(
+            analise_clientes
+        ),
+
+        'produtores': produtores,
+
+        'clientes': clientes
+
     }
 
     return render(
@@ -338,3 +471,4 @@ def cadastrar_pedido(request):
             'form': form
         }
     )
+

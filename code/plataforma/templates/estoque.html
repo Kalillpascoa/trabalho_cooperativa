@@ -4,47 +4,162 @@
 
 <div class="container mt-4">
 
-    <h2 class="mb-4">Controle de Estoque</h2>
-    <a href="{% url 'cadastro_estoque' %}" 
-        class="btn btn-success mb-4">
+    <h2 class="mb-4 fw-bold">
+        Controle Inteligente de Estoque
+    </h2>
 
-            Cadastrar nova produção
-
+    <a href="{% url 'cadastro_estoque' %}"
+       class="btn btn-success mb-4">
+        ➕ Cadastrar nova produção
     </a>
 
-    <div class="card shadow p-4 mb-5">
+    <!-- ===================================== -->
+    <!-- GRÁFICO 1 -->
+    <!-- ===================================== -->
 
-        <h4 class="mb-4">Estoque Total dos Produtos</h4>
+    <div class="card shadow border-0 mb-5">
 
-        <canvas id="graficoBarra"></canvas>
+        <div class="card-body">
 
-    </div>
+            <h4 class="mb-4">
+                Estoque Total por Produto (ton)
+            </h4>
 
-    <div class="card shadow p-4">
-
-        <h4 class="mb-4">Estoque por Produtor</h4>
-
-        <div class="mb-4">
-
-            <label class="form-label">
-                Selecione o produtor
-            </label>
-
-            <select id="produtorSelect" class="form-select">
-
-                {% for produtor in produtores %}
-
-                <option value="{{ produtor.nome }}">
-                    {{ produtor.nome }}
-                </option>
-
-                {% endfor %}
-
-            </select>
+            <canvas id="graficoBarra"></canvas>
 
         </div>
 
-        <canvas id="graficoPizza"></canvas>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- GRÁFICO 2 -->
+    <!-- ===================================== -->
+
+    <div class="card shadow border-0 mb-5">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h4 class="mb-0">
+                    Percentual de Produtos por Produtor
+                </h4>
+
+                <div style="width:300px;">
+
+                    <select id="produtorSelect"
+                            class="form-select">
+
+                        {% for produtor in produtores %}
+
+                            <option value="{{ produtor.nome }}">
+                                {{ produtor.nome }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <canvas id="graficoPizza"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- GRÁFICO 3 -->
+    <!-- ===================================== -->
+
+    <div class="card shadow border-0 mb-5">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                Renda Potencial x Saldo Disponível (R$)
+            </h4>
+
+            <canvas id="graficoFinanceiro"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- ANÁLISE CLIENTE -->
+    <!-- ===================================== -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h4 class="mb-0">
+                    Análise por Cliente
+                </h4>
+
+                <div style="width:300px;">
+
+                    <select id="clienteSelect"
+                            class="form-select">
+
+                        <option value="">
+                            Todos os clientes
+                        </option>
+
+                        {% for cliente in clientes %}
+
+                            <option value="{{ cliente.nome }}">
+                                {{ cliente.nome }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-striped table-hover">
+
+                    <thead class="table-success">
+
+                        <tr>
+
+                            <th>Cliente</th>
+                            <th>Produto</th>
+                            <th>Pedidos</th>
+                            <th>Total Produto (R$)</th>
+                            <th>Custo Produto (R$)</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tabelaClientes">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="mt-4">
+
+                <h5 id="totalGeral"
+                    class="fw-bold text-success">
+                </h5>
+
+            </div>
+
+        </div>
 
     </div>
 
@@ -54,6 +169,10 @@
 
 <script>
 
+    // =========================================
+    // DADOS DJANGO
+    // =========================================
+
     const labelsBarra = JSON.parse('{{ labels|safe|escapejs }}');
 
     const dadosBarra = JSON.parse('{{ dados|safe|escapejs }}');
@@ -62,8 +181,19 @@
         '{{ estoque_produtores|safe|escapejs }}'
     );
 
+    const financeiro = JSON.parse(
+        '{{ financeiro|safe|escapejs }}'
+    );
 
-    const graficoBarra = new Chart(
+    const analiseClientes = JSON.parse(
+        '{{ analise_clientes|safe|escapejs }}'
+    );
+
+    // =========================================
+    // GRÁFICO 1
+    // =========================================
+
+    new Chart(
 
         document.getElementById('graficoBarra'),
 
@@ -79,11 +209,13 @@
 
                     {
 
-                        label: 'Toneladas em estoque',
+                        label: 'Quantidade em estoque',
 
                         data: dadosBarra,
 
-                        borderWidth: 1
+                        backgroundColor: 'rgba(25, 135, 84, 0.7)',
+
+                        borderRadius: 6
 
                     }
 
@@ -111,13 +243,16 @@
 
     );
 
+    // =========================================
+    // GRÁFICO 2
+    // =========================================
 
     let graficoPizza = null;
 
+    function carregarGraficoPizza(produtor) {
 
-    function carregarGrafico(produtor) {
-
-        const dadosProdutor = estoqueProdutores[produtor];
+        const dadosProdutor =
+            estoqueProdutores[produtor];
 
         if (!dadosProdutor) {
 
@@ -167,28 +302,165 @@
 
     }
 
+    const produtorSelect =
+        document.getElementById('produtorSelect');
 
-    const selectProdutor = document.getElementById('produtorSelect');
+    carregarGraficoPizza(produtorSelect.value);
 
-
-    if (selectProdutor.value) {
-
-        carregarGrafico(selectProdutor.value);
-
-    }
-
-
-    selectProdutor.addEventListener(
+    produtorSelect.addEventListener(
 
         'change',
 
-        function () {
+        function() {
 
-            carregarGrafico(this.value);
+            carregarGraficoPizza(this.value);
 
         }
 
     );
+
+    // =========================================
+    // GRÁFICO 3
+    // =========================================
+
+    new Chart(
+
+        document.getElementById('graficoFinanceiro'),
+
+        {
+
+            type: 'bar',
+
+            data: {
+
+                labels: financeiro.labels,
+
+                datasets: [
+
+                    {
+
+                        label: 'Renda Potencial',
+
+                        data: financeiro.potencial,
+
+                        backgroundColor:
+                            'rgba(220,53,69,0.7)',
+
+                        borderRadius: 6
+
+                    },
+
+                    {
+
+                        label: 'Saldo Disponível',
+
+                        data: financeiro.disponivel,
+
+                        backgroundColor:
+                            'rgba(25,135,84,0.7)',
+
+                        borderRadius: 6
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+    // =========================================
+    // TABELA CLIENTES
+    // =========================================
+
+    const tabelaClientes =
+        document.getElementById('tabelaClientes');
+
+    const totalGeral =
+        document.getElementById('totalGeral');
+
+    function carregarClientes(clienteSelecionado='') {
+
+        tabelaClientes.innerHTML = '';
+
+        let total = 0;
+
+        analiseClientes.forEach(item => {
+
+            if (
+                clienteSelecionado &&
+                item.cliente !== clienteSelecionado
+            ) {
+
+                return;
+
+            }
+
+            total += item.total;
+
+            tabelaClientes.innerHTML += `
+
+                <tr>
+
+                    <td>${item.cliente}</td>
+
+                    <td>${item.produto}</td>
+
+                    <td>${item.pedidos}</td>
+
+                    <td>
+                        R$ ${item.total.toFixed(2)}
+                    </td>
+
+                    <td>
+                        R$ ${item.custo.toFixed(2)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+        totalGeral.innerHTML =
+            'Total Geral: R$ ' +
+            total.toFixed(2);
+
+    }
+
+    carregarClientes();
+
+    document.getElementById('clienteSelect')
+
+        .addEventListener(
+
+            'change',
+
+            function() {
+
+                carregarClientes(this.value);
+
+            }
+
+        );
 
 </script>
 

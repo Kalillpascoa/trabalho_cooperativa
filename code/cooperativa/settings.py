@@ -123,3 +123,4 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'pagina_inicial'
 LOGOUT_REDIRECT_URL = 'pagina_inicial'
 
+
