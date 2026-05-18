@@ -84,7 +84,7 @@
 
                 <!-- INÍCIO -->
                 <li class="nav-item">
-                    <a class="nav-link"
+                    <a class="nav-link {% if request.resolver_match.url_name == 'pagina_inicial' %}active{% endif %}" aria-current="page"
                        href="{% url 'pagina_inicial' %}">
                         Início
                     </a>
@@ -94,7 +94,7 @@
 
                     <!-- PRODUTORES -->
                     <li class="nav-item">
-                        <a class="nav-link"
+                        <a class="nav-link {% if request.resolver_match.url_name == 'produtores' %}active{% endif %}"
                            href="{% url 'produtores' %}">
                             Produtores
                         </a>
@@ -102,7 +102,7 @@
 
                     <!-- PRODUTOS -->
                     <li class="nav-item">
-                        <a class="nav-link"
+                        <a class="nav-link {% if request.resolver_match.url_name == 'produtos' %}active{% endif %}"
                            href="{% url 'produtos' %}">
                             Produtos
                         </a>
@@ -110,7 +110,7 @@
 
                     <!-- CLIENTES -->
                     <li class="nav-item">
-                        <a class="nav-link"
+                        <a class="nav-link {% if request.resolver_match.url_name == 'clientes' %}active{% endif %}"
                            href="{% url 'clientes' %}">
                             Clientes
                         </a>
@@ -118,7 +118,7 @@
 
                     <!-- ESTOQUE -->
                     <li class="nav-item">
-                        <a class="nav-link"
+                        <a class="nav-link {% if request.resolver_match.url_name == 'estoque' %}active{% endif %}"
                            href="{% url 'estoque' %}">
                             Estoque
                         </a>
@@ -126,7 +126,7 @@
 
                     <!-- PEDIDOS -->
                     <li class="nav-item">
-                        <a class="nav-link"
+                        <a class="nav-link {% if request.resolver_match.url_name == 'pedidos' %}active{% endif %}"
                            href="{% url 'pedidos' %}">
                             Pedidos
                         </a>
