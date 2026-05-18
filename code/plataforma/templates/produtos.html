@@ -8,12 +8,11 @@
 
         <h2>Produtos</h2>
 
-        <a href="{% url 'cadastro_produto' %}"
-           class="btn btn-success">
-
-            Cadastrar novo produto
-
-        </a>
+        {% if perfil_tipo == 'PRODUTOR' or perfil_tipo == 'Produtor' %}
+            <a href="{% url 'cadastro_produto' %}" class="btn btn-success">
+                Cadastrar novo produto
+            </a>
+        {% endif %}
 
     </div>
 
