@@ -9,8 +9,23 @@ from .models import (
     Pedido,
 )
 
+# =========================================
+# INLINE ESTOQUE
+# =========================================
 
+class EstoqueInline(admin.TabularInline):
+
+    model = Estoque
+    extra = 1
+
+
+# =========================================
+# PRODUTOR
+# =========================================
+
+@admin.register(Produtor)
 class ProdutorAdmin(admin.ModelAdmin):
+
     list_display = (
         "nome",
         "fazenda",
@@ -18,32 +33,91 @@ class ProdutorAdmin(admin.ModelAdmin):
         "saldo",
     )
 
+    search_fields = (
+        "nome",
+        "fazenda",
+        "municipio",
+    )
 
+    list_filter = (
+        "municipio",
+    )
+
+    inlines = [EstoqueInline]
+
+
+# =========================================
+# PRODUTO
+# =========================================
+
+@admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
+
     list_display = (
         "nome",
         "estoque_total",
         "preco",
     )
 
+    search_fields = (
+        "nome",
+    )
 
+    list_filter = (
+        "preco",
+    )
+
+
+# =========================================
+# CLIENTE
+# =========================================
+
+@admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
+
     list_display = (
         "nome",
         "email",
         "telefone",
     )
 
+    search_fields = (
+        "nome",
+        "email",
+    )
 
+
+# =========================================
+# ESTOQUE
+# =========================================
+
+@admin.register(Estoque)
 class EstoqueAdmin(admin.ModelAdmin):
+
     list_display = (
         "produtor",
         "produto",
         "quantidade",
     )
 
+    search_fields = (
+        "produtor__nome",
+        "produto__nome",
+    )
 
+    list_filter = (
+        "produto",
+        "produtor",
+    )
+
+
+# =========================================
+# PEDIDOS
+# =========================================
+
+@admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
+
     list_display = (
         "cliente",
         "produto",
@@ -52,8 +126,24 @@ class PedidoAdmin(admin.ModelAdmin):
         "data",
     )
 
+    search_fields = (
+        "cliente__nome",
+        "produto__nome",
+    )
 
+    list_filter = (
+        "data",
+        "produto",
+    )
+
+
+# =========================================
+# PERFIL
+# =========================================
+
+@admin.register(Perfil)
 class PerfilAdmin(admin.ModelAdmin):
+
     list_display = (
         "user",
         "tipo",
@@ -63,10 +153,6 @@ class PerfilAdmin(admin.ModelAdmin):
         "user__username",
     )
 
-
-admin.site.register(Produtor, ProdutorAdmin)
-admin.site.register(Produto, ProdutoAdmin)
-admin.site.register(Cliente, ClienteAdmin)
-admin.site.register(Estoque, EstoqueAdmin)
-admin.site.register(Pedido, PedidoAdmin)
-admin.site.register(Perfil, PerfilAdmin)
+    list_filter = (
+        "tipo",
+    )
