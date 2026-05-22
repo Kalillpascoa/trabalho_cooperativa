@@ -48,12 +48,13 @@ Após ativar, o terminal deverá exibir algo parecido com:
 (venv)
 ```
 
-## 3. Instale o Djando no ambiente virtual
+## 3. Instale o Djando e o Grappelli no ambiente virtual
 
 Dentro do ambiente virtual, rode o comando
 
 ```
 pip install django
+python3 -m pip install django-grappelli
 ```
 
 ## 4. Execute as migrations
